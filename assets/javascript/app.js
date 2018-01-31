@@ -1,5 +1,5 @@
-// Initial array of movies
-var animals = ["Dog", "Cat", "Hamster", "Bear"];
+// Initial array of animals
+var animals = ["Dog", "Cat", "Hamster", "Mouse","Bunny","Monkey",];
 var imageClicked=false;
 
  // Function for displaying animal buttons 
@@ -20,21 +20,58 @@ var imageClicked=false;
   function displayAnimalInfo() {
 
     $("#images").html("");
-    var animalName=$(this).text();
+    var animalName=$(this).attr("data-name");
     //$(this).focus();
     var limit=10;
-    var rating="pg";
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q="+ animalName +"&api_key=dc6zaTOxFJmzC&limit="+limit+"&rating="+rating;
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q="+ animalName +"&api_key=dc6zaTOxFJmzC&limit="+limit;
     
    $.ajax({
     url: queryURL,
     method: "GET"
    }).then(function(response) {
-    for(var i=0;i<=limit;i++){
-        $("#images").append("<img class='img-thumbnail' hspace='20' src="+JSON.stringify(response.data[i].images.fixed_height_still.url)+">");
-      
-     } });
+    var results = response.data;
+        
+         for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("<div class='item'>");
+            gifDiv.addClass("inline");
+            var rating = results[i].rating;
 
+            var p = $("<p>").text("Rating: " + rating);
+            var animalImage = $("<img>");
+            animalImage.attr("src", results[i].images.fixed_height_still.url);
+            animalImage.attr("data-still", results[i].images.fixed_height_still.url);
+            animalImage.attr("data-animate",results[i].images.fixed_height.url);
+            animalImage.attr("data-state","still");
+            animalImage.addClass("img-thumbnail animalImage");
+            animalImage.attr("hspace","20");
+
+            gifDiv.prepend(p);
+            gifDiv.append(animalImage);
+            gifDiv.append(" ");
+
+            $("#images").append(gifDiv);
+          }
+
+      });
+
+
+      }
+
+      function animalAnimate(){
+
+        var state=$(this).attr("data-state");
+        if(state=="still")
+        {
+          var src=$(this).attr("data-animate");
+          $(this).attr("src",src);
+          $(this).attr("data-state","animate");
+        }
+        else if(state=="animate")
+        {
+          var src=$(this).attr("data-still");
+          $(this).attr("src",src);
+          $(this).attr("data-state","still");
+        }
 
       }
 
@@ -52,8 +89,7 @@ var imageClicked=false;
       });
 
  $(document).on("click", ".animal", displayAnimalInfo);
- //$("#images").on("click","img",displayAnimalInfo);
+ $(document).on("click","img",animalAnimate);
 
 
   renderButtons();
-
