@@ -1,19 +1,21 @@
-.navbar-brand{
-	font-size:50px;
+.navbar-brand {
+	font-size: 50px;
 }
 
-div.inline { 
-	float:left;
- }
-
-.animalImage{
-	width:200px;
-	height:200px;	
+div.inline {
+	float: left;
 }
 
- p{
-	color:black;
-	font-size:15px;
-} 
+.animalImage {
+	width: 200px;
+	height: 200px;
+}
 
+p {
+	color: black;
+	font-size: 15px;
+}
 
+.container {
+	margin-bottom: 100px;
+}
